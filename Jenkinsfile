@@ -6,12 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git credentialsId: 'github-creds', url: 'https://github.com/Resmi86/Robotframework.git', branch: 'main'
-            }
-        }
-
         stage('Install Robot Framework') {
             steps {
                 bat '''
@@ -23,11 +17,10 @@ pipeline {
 
         stage('Run Robot Tests') {
             steps {
-                dir("${ROBOT_REPORT_DIR}") {
-                    bat '''
-                    robot --output ../output.xml --log ../log.html --report ../report.html login.robot
-                    '''
-                }
+                bat '''
+                cd Testcases
+                robot --output ../output.xml --log ../log.html --report ../report.html login.robot
+                '''
             }
         }
 
