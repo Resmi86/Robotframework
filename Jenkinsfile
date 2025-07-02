@@ -14,7 +14,7 @@ pipeline {
 
         stage('Install Robot Framework') {
             steps {
-                sh '''
+                bat '''
                 python -m pip install --upgrade pip
                 pip install robotframework
                 '''
@@ -24,7 +24,7 @@ pipeline {
         stage('Run Robot Tests') {
             steps {
                 dir("${ROBOT_REPORT_DIR}") {
-                    sh '''
+                    bat '''
                     robot --output ../output.xml --log ../log.html --report ../report.html login.robot
                     '''
                 }
