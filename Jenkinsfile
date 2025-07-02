@@ -4,13 +4,19 @@ pipeline {
     stages {
         stage('Install Robot Framework') {
             steps {
-                bat 'cmd.exe /c "python -m pip install --upgrade pip && pip install robotframework"'
+                bat '''
+                python -m pip install --upgrade pip
+                pip install robotframework
+                '''
             }
         }
 
         stage('Run Robot Tests') {
             steps {
-                bat 'cmd.exe /c "cd Testcases && robot --output ../output.xml --log ../log.html --report ../report.html login.robot"'
+                bat '''
+                cd Testcases
+                robot --output ../output.xml --log ../log.html --report ../report.html login.robot
+                '''
             }
         }
 
@@ -34,4 +40,3 @@ pipeline {
         }
     }
 }
-
