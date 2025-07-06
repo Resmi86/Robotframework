@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // Add Python venv Scripts (includes robot, pip, chromedriver) and System32
+        // Append virtualenv Scripts to PATH for robot/chromedriver/etc.
         PATH = "${env.PATH};C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts;C:\\Windows\\System32"
     }
 
@@ -10,9 +10,9 @@ pipeline {
         stage('Install Robot Framework') {
             steps {
                 bat '''
-                    python -m pip install --upgrade pip
-                    pip install robotframework
-                    pip install robotframework-seleniumlibrary
+                    C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts\\python.exe -m pip install --upgrade pip
+                    C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts\\pip.exe install robotframework
+                    C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts\\pip.exe install robotframework-seleniumlibrary
                 '''
             }
         }
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 bat '''
                     cd Testcases
-                    robot --output ../output.xml --log ../log.html --report ../report.html login.robot
+                    C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts\\robot.exe --output ../output.xml --log ../log.html --report ../report.html login.robot
                 '''
             }
         }
