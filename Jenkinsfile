@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PATH = "${env.PATH};C:\\Windows\\System32"
+        PATH = "${env.PATH};C:\\Windows\\System32;C:\\Users\\Deepesh\\AppData\\Local\\Programs\\Python\\Python39\\Scripts"
     }
 
     stages {
@@ -10,7 +10,7 @@ pipeline {
             steps {
                 bat '''
                     python -m pip install --upgrade pip
-                    pip install robotframework
+                    C:\\Users\\Deepesh\\AppData\\Local\\Programs\\Python\\Python39\\Scripts\\pip.exe install robotframework
                 '''
             }
         }
