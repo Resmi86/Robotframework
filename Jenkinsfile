@@ -2,17 +2,22 @@ pipeline {
     agent any
 
     environment {
-        PYTHON_ENV = 'C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts'
-        CHROMEDRIVER_PATH = 'C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts'
-        PATH = "${env.PATH};${PYTHON_ENV};${CHROMEDRIVER_PATH}"
+        // Add System32 explicitly to ensure cmd.exe is found
+        PATH = "${env.PATH};C:\\Windows\\System32"
     }
 
     stages {
+        stage('Fix CMD') {
+            steps {
+                bat 'cmd /c echo ✅ CMD now works!'
+            }
+        }
+
         stage('Install Robot Framework & SeleniumLibrary') {
             steps {
-                bat '"%PYTHON_ENV%\\python.exe" -m pip install --upgrade pip'
-                bat '"%PYTHON_ENV%\\pip.exe" install robotframework'
-                bat '"%PYTHON_ENV%\\pip.exe" install robotframework-seleniumlibrary'
+                bat 'C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts\\python.exe -m pip install --upgrade pip'
+                bat 'C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts\\pip.exe install robotframework'
+                bat 'C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts\\pip.exe install robotframework-seleniumlibrary'
             }
         }
 
@@ -20,25 +25,25 @@ pipeline {
             steps {
                 bat '''
                     cd Testcases
-                    "%PYTHON_ENV%\\robot.exe" --output ../output.xml --log ../log.html --report ../report.html login.robot
+                    C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts\\robot.exe ^
+                    --output ../output.xml --log ../log.html --report ../report.html login.robot
                 '''
             }
         }
 
         stage('Archive Reports') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
             steps {
-                junit '**/output.xml'
-                archiveArtifacts artifacts: '**/*.html', allowEmptyArchive: true
+                junit 'output.xml'
             }
         }
     }
 
     post {
         always {
-            echo "❌ Tests Failed"
+            echo '✅ Pipeline completed.'
+        }
+        failure {
+            echo '❌ Tests Failed'
         }
     }
 }
