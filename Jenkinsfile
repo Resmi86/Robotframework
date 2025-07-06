@@ -2,48 +2,42 @@ pipeline {
     agent any
 
     environment {
-        CMD_PATH = "C:\\Windows\\System32"
-        PYTHON_HOME = "C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts"
-        PATH = "${env.PATH};${CMD_PATH};${PYTHON_HOME}"
+        PYTHON_HOME = 'C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts'
+        PATH = "${env.PATH};${PYTHON_HOME}"
     }
 
     stages {
         stage('Install Robot Framework & SeleniumLibrary') {
             steps {
-                bat """
-                    ${PYTHON_HOME}\\python.exe -m pip install --upgrade pip
-                    ${PYTHON_HOME}\\pip.exe install robotframework
-                    ${PYTHON_HOME}\\pip.exe install robotframework-seleniumlibrary
-                """
+                bat "${env.PYTHON_HOME}\\python.exe -m pip install --upgrade pip"
+                bat "${env.PYTHON_HOME}\\pip.exe install robotframework"
+                bat "${env.PYTHON_HOME}\\pip.exe install robotframework-seleniumlibrary"
             }
         }
 
         stage('Run Robot Tests') {
             steps {
-                bat """
+                bat '''
                     cd Testcases
                     ${PYTHON_HOME}\\robot.exe --output ../output.xml --log ../log.html --report ../report.html login.robot
-                """
+                '''
             }
         }
 
         stage('Archive Reports') {
+            when {
+                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
+            }
             steps {
-                archiveArtifacts artifacts: 'log.html,report.html', fingerprint: true
-                robot outputPath: '.', outputFileName: 'output.xml'
+                junit '**/output.xml'
+                archiveArtifacts artifacts: '**/*.html', allowEmptyArchive: true
             }
         }
     }
 
     post {
         always {
-            junit allowEmptyResults: true, testResults: 'output.xml'
-        }
-        success {
-            echo '✅ Tests Passed'
-        }
-        failure {
-            echo '❌ Tests Failed'
+            echo "❌ Tests Failed"
         }
     }
 }
