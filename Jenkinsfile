@@ -19,7 +19,7 @@ pipeline {
             steps {
                 bat '''
                     cd Testcases
-                    robot --output ../output.xml --log ../log.html --report ../report.html login.robot
+                    C:\\Users\\Deepesh\\AppData\\Local\\Programs\\Python\\Python39\\Scripts\\robot.exe --output ../output.xml --log ../log.html --report ../report.html login.robot
                 '''
             }
         }
