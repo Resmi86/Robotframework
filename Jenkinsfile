@@ -2,16 +2,17 @@ pipeline {
     agent any
 
     environment {
-        PYTHON_HOME = 'C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts'
-        PATH = "${env.PATH};${PYTHON_HOME}"
+        PYTHON_ENV = 'C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts'
+        CHROMEDRIVER_PATH = 'C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts'
+        PATH = "${env.PATH};${PYTHON_ENV};${CHROMEDRIVER_PATH}"
     }
 
     stages {
         stage('Install Robot Framework & SeleniumLibrary') {
             steps {
-                bat "${env.PYTHON_HOME}\\python.exe -m pip install --upgrade pip"
-                bat "${env.PYTHON_HOME}\\pip.exe install robotframework"
-                bat "${env.PYTHON_HOME}\\pip.exe install robotframework-seleniumlibrary"
+                bat '"%PYTHON_ENV%\\python.exe" -m pip install --upgrade pip'
+                bat '"%PYTHON_ENV%\\pip.exe" install robotframework'
+                bat '"%PYTHON_ENV%\\pip.exe" install robotframework-seleniumlibrary'
             }
         }
 
@@ -19,7 +20,7 @@ pipeline {
             steps {
                 bat '''
                     cd Testcases
-                    ${PYTHON_HOME}\\robot.exe --output ../output.xml --log ../log.html --report ../report.html login.robot
+                    "%PYTHON_ENV%\\robot.exe" --output ../output.xml --log ../log.html --report ../report.html login.robot
                 '''
             }
         }
