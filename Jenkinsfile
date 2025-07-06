@@ -1,21 +1,19 @@
-
-
-
-
 pipeline {
     agent any
 
     environment {
+        CMD_PATH = "C:\\Windows\\System32"
         PYTHON_HOME = "C:\\Users\\Deepesh\\.virtualenvs\\Robot1\\Scripts"
-        PATH = "${env.PATH};${PYTHON_HOME}"
+        PATH = "${env.PATH};${CMD_PATH};${PYTHON_HOME}"
     }
 
     stages {
         stage('Install Robot Framework & SeleniumLibrary') {
             steps {
                 bat """
-                    ${env.PYTHON_HOME}\\python.exe -m pip install --upgrade pip
-                    ${env.PYTHON_HOME}\\pip.exe install robotframework robotframework-seleniumlibrary
+                    ${PYTHON_HOME}\\python.exe -m pip install --upgrade pip
+                    ${PYTHON_HOME}\\pip.exe install robotframework
+                    ${PYTHON_HOME}\\pip.exe install robotframework-seleniumlibrary
                 """
             }
         }
@@ -24,7 +22,7 @@ pipeline {
             steps {
                 bat """
                     cd Testcases
-                    ${env.PYTHON_HOME}\\robot.exe --output ../output.xml --log ../log.html --report ../report.html login.robot
+                    ${PYTHON_HOME}\\robot.exe --output ../output.xml --log ../log.html --report ../report.html login.robot
                 """
             }
         }
